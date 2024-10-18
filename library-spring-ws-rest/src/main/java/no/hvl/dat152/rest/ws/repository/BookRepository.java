@@ -22,11 +22,14 @@ import no.hvl.dat152.rest.ws.model.Book;
  */
 public interface BookRepository extends CrudRepository<Book, Long>, PagingAndSortingRepository<Book, Long> {
 	
+	Optional<Book> findById(Long id);
+	
 	Optional<Book> findByIsbn(String isbn);
 	
 	Page<Book> findAll(Pageable pageable);
 	
 	Iterable<Book> findAll(Sort sort);
+
 	
 	@Query("SELECT b FROM Book b WHERE b.isbn = :isbn")
 	Book findBookByISBN(@Param("isbn") String isbn);

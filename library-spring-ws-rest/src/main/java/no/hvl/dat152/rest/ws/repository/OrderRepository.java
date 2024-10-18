@@ -5,11 +5,13 @@ package no.hvl.dat152.rest.ws.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
 import org.springframework.data.repository.query.Param;
 
 import no.hvl.dat152.rest.ws.model.Order;
@@ -19,8 +21,15 @@ import no.hvl.dat152.rest.ws.model.Order;
  */
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+	Page<Order> findAll(Pageable pageable);
+	
 	@Query(value = "SELECT user_id FROM orders WHERE id = :id", nativeQuery=true)
 	Long findUserID(@Param("id") Long id);
+	
+	Optional<Order> findById(Long orderId);
+	
+	@Query(value = "SELECT * FROM orders WHERE expiry <= :expiry", nativeQuery = true)
+	Page<Order> findOrderByExpiryAndSorted(@Param("expiry") LocalDate expiry, Pageable pageable);
 	
 	@Query(value = "SELECT * FROM orders WHERE expiry <= :expiry limit :limit offset :offset ", nativeQuery=true)
 	List<Order> findOrderByExpiry(

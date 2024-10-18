@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -33,5 +34,13 @@ public interface BookRepository extends CrudRepository<Book, Long>, PagingAndSor
 	
 	@Query(value = "SELECT * FROM Book limit :limit offset :offset", nativeQuery=true)
 	List<Book> findAllPaginate(@Param("limit") int limit, @Param("offset") int offset);
+	
+	Optional<Book> findById(Long id);
+	
+	
+	Iterable<Book> findAll(Sort sort);
+
+	
+	List<Book> findByTitleContaining(String term);
 
 }

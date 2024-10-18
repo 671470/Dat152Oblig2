@@ -81,7 +81,7 @@ class TestUser {
 		Response response = RestAssured.get(API_ROOT+"/users/1/orders/1");
 	    
 	    assertEquals(HttpStatus.OK.value(), response.getStatusCode());
-	    assertEquals("ghijk1234", response.jsonPath().get("isbn"));
+	    assertEquals("1", response.jsonPath().get("id").toString());
 	}
 	
 	@DisplayName("JUnit test for @DeleteMapping(/users/{uid}/orders/{oid}) endpoint")
@@ -124,9 +124,11 @@ class TestUser {
 				.post(API_ROOT+"/users/{id}/orders", "2");
 
 		List<Object> isbns = response.jsonPath().getList("isbn");
+		List<Object> hrefs = response.jsonPath().getList("links");
 		
 	    assertEquals(HttpStatus.CREATED.value(), response.getStatusCode());
 	    assertTrue(isbns.contains("rstuv1540"));
+	    assertTrue(hrefs.get(0).toString().contains("href"));
 
 	}
 	

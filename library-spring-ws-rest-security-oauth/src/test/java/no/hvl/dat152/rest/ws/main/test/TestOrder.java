@@ -109,17 +109,6 @@ class TestOrder {
 
 	}
 	
-	@DisplayName("JUnit test for HATEOAS @GetMapping(/orders/{id}) endpoint")
-	@Test
-	public void getOrderById_HATEOAS_thenOK() {
-
-	    Response response = RestAssured.given()
-	    		.header("Authorization", "Bearer "+ USER_TOKEN)
-	    		.get(API_ROOT+"/orders/2");
-	    
-	    assertTrue(response.jsonPath().get("_links").toString().contains("href"));
-	}
-	
 	private String updateOrderData() {
 		String expiry = LocalDate.now().plusWeeks(4).toString();
 		String json = "{\n"

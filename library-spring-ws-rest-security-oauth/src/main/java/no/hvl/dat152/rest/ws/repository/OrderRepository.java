@@ -39,5 +39,15 @@ public interface OrderRepository extends CrudRepository<Order, Long>, PagingAndS
 	
 	@Query(value = "SELECT user_email FROM orders WHERE id = :id", nativeQuery=true)
 	String findEmailByOrderId(Long id);
+	
+	@Query(value = "SELECT * FROM orders WHERE user_id = :uid", nativeQuery=true)
+	List<Order> findByUserId(Long uid);
+	
+	
+	
+	@Query(value = "SELECT * FROM orders WHERE expiry <= :expiry", nativeQuery = true)
+	Page<Order> findOrderByExpiryAndSorted(@Param("expiry") LocalDate expiry, Pageable pageable);
+	
+
 
 }

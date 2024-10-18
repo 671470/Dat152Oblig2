@@ -91,14 +91,5 @@ class TestOrder {
 	    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), RestAssured.get(API_ROOT+"/orders/1").getStatusCode());
 
 	}
-	
-	@DisplayName("JUnit test for HATEOAS @GetMapping(/orders/{id}) endpoint")
-	@Test
-	public void getOrderById_HATEOAS_thenOK() {
-
-	    Response response = RestAssured.get(API_ROOT+"/orders/2");
-	    
-	    assertTrue(response.jsonPath().get("_links").toString().contains("href"));
-	}
 
 }

@@ -30,6 +30,8 @@ import no.hvl.dat152.rest.ws.model.Author;
 import no.hvl.dat152.rest.ws.model.Book;
 import no.hvl.dat152.rest.ws.service.BookService;
 
+// Den er grei!
+
 /**
  * @author tdoy
  */
@@ -68,10 +70,52 @@ public class BookController {
 		return new ResponseEntity<>(nbook, HttpStatus.CREATED);
 	}
 	
-	// TODO - getAuthorsOfBookByISBN (@Mappings, URI, and method)
+	@GetMapping("/books/{isbn}/authors")
+	public ResponseEntity<Object> getAuthorsOfBookByISBN(@PathVariable("isbn") String isbn){
+		
+		Set<Author> authors = bookService.findAuthorsOfBookByISBN(isbn);
+		
+		return new ResponseEntity<>(authors, HttpStatus.OK);
+		
+	}
 	
-	// TODO - updateBookByISBN (@Mappings, URI, and method)
+	@PutMapping("/books/{isbn}")
+	public ResponseEntity<Object> updateBookByISBN(@PathVariable("isbn") String isbn, @RequestBody Book book) throws BookNotFoundException{
+		
+		Book nbook = bookService.updateBook(book, isbn);
+		
+		return new ResponseEntity<>(nbook, HttpStatus.OK);
+		
+		
+	}
 	
-	// TODO - deleteBookByISBN (@Mappings, URI, and method)
+	@DeleteMapping("/books/{isbn}")
+	public ResponseEntity<Object> deleteBookByISBN(@PathVariable("isbn") String isbn) throws BookNotFoundException{
+		
+		bookService.deleteByISBN(isbn);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+		
+		
+	}
+	
+	
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

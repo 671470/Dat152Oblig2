@@ -31,7 +31,7 @@ public interface OrderRepository extends CrudRepository<Order, Long>, PagingAndS
 			@Param("limit") int limit,
 			@Param("offset") int offset);
 	
-	Page<Order> findByExpiryBefore(LocalDate expiry, Pageable pageable);
+	
 	
 	List<Order> findAll(Sort sort);
 	
@@ -43,4 +43,8 @@ public interface OrderRepository extends CrudRepository<Order, Long>, PagingAndS
 	@Query(value = "SELECT user_email FROM orders WHERE id = :id", nativeQuery=true)
 	String findEmailByOrderId(Long id);
 	
+	@Query(value = "SELECT * FROM orders WHERE expiry <= :expiry", nativeQuery = true)
+	Page<Order> findOrderByExpiryAndSorted(@Param("expiry") LocalDate expiry, Pageable pageable);
+	
+	Page<Order> findByExpiryBefore(LocalDate expiry, Pageable pageable);
 }
