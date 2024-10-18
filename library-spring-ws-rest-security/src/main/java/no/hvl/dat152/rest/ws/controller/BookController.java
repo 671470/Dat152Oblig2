@@ -24,8 +24,6 @@ import no.hvl.dat152.rest.ws.model.Author;
 import no.hvl.dat152.rest.ws.model.Book;
 import no.hvl.dat152.rest.ws.service.BookService;
 
-// Den er grei!
-
 /**
  * @author tdoy
  */
@@ -35,87 +33,67 @@ public class BookController {
 
 	@Autowired
 	private BookService bookService;
-	
+
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/books")
-	public ResponseEntity<Object> getAllBooks(){
-		
+	public ResponseEntity<Object> getAllBooks() {
+
 		List<Book> books = bookService.findAll();
-		
-		if(books.isEmpty())
+
+		if (books.isEmpty())
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		
-		return new ResponseEntity<>(books, HttpStatus.OK);		
+
+		return new ResponseEntity<>(books, HttpStatus.OK);
 	}
-	
+
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/books/{isbn}")
-	public ResponseEntity<Object> getBook(@PathVariable("isbn") String isbn) throws BookNotFoundException{
-		
+	public ResponseEntity<Object> getBook(@PathVariable("isbn") String isbn) throws BookNotFoundException {
+
 		Book book = bookService.findByISBN(isbn);
-		
+
 		return new ResponseEntity<>(book, HttpStatus.OK);
-				
+
 	}
-	
+
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/books")
-	public ResponseEntity<Book> createBook(@RequestBody Book book){
-		
+	public ResponseEntity<Book> createBook(@RequestBody Book book) {
+
 		Book nbook = bookService.saveBook(book);
-		
+
 		return new ResponseEntity<>(nbook, HttpStatus.CREATED);
 	}
-	
+
 	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/books/{isbn}/authors")
-	public ResponseEntity<Object> getAuthorsOfBookByISBN(@PathVariable("isbn") String isbn){
-		
+	public ResponseEntity<Object> getAuthorsOfBookByISBN(@PathVariable("isbn") String isbn) {
+
 		Set<Author> authors = bookService.findAuthorsOfBookByISBN(isbn);
-		
+
 		return new ResponseEntity<>(authors, HttpStatus.OK);
-		
+
 	}
-	
+
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PutMapping("/books/{isbn}")
-	public ResponseEntity<Object> updateBookByISBN(@PathVariable("isbn") String isbn, @RequestBody Book book) throws BookNotFoundException{
-		
+	public ResponseEntity<Object> updateBookByISBN(@PathVariable("isbn") String isbn, @RequestBody Book book)
+			throws BookNotFoundException {
+
 		Book nbook = bookService.updateBook(book, isbn);
-		
+
 		return new ResponseEntity<>(nbook, HttpStatus.OK);
-		
-		
+
 	}
-	
+
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@DeleteMapping("/books/{isbn}")
-	public ResponseEntity<Object> deleteBookByISBN(@PathVariable("isbn") String isbn) throws BookNotFoundException{
-		
+	public ResponseEntity<Object> deleteBookByISBN(@PathVariable("isbn") String isbn) throws BookNotFoundException {
+
 		bookService.deleteByISBN(isbn);
-		
+
 		return new ResponseEntity<>(HttpStatus.OK);
-		
-		
+
 	}
-	
-	
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

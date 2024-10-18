@@ -25,89 +25,61 @@ public class OrderService {
 
 	@Autowired
 	private OrderRepository orderRepository;
-	
+
 	public Order saveOrder(Order order) {
-		
+
 		order = orderRepository.save(order);
-		
+
 		return order;
 	}
-	
+
 	public Order findOrder(Long id) throws OrderNotFoundException {
-		
-		Order order = orderRepository.findById(id)
-				.orElseThrow(()-> new OrderNotFoundException("Order with id: "+id+" not found in the order list!"));
-		
+
+		Order order = orderRepository.findById(id).orElseThrow(
+				() -> new OrderNotFoundException("Order with id: " + id + " not found in the order list!"));
+
 		return order;
 	}
-	
+
 	public void deleteOrder(Long id) throws OrderNotFoundException {
-		
-		Order order = orderRepository.findById(id)
-				.orElseThrow(()-> new OrderNotFoundException("Order with id: "+id+" not found in the order list!"));
-		
+
+		Order order = orderRepository.findById(id).orElseThrow(
+				() -> new OrderNotFoundException("Order with id: " + id + " not found in the order list!"));
+
 		orderRepository.delete(order);
-		
+
 	}
-	
-	public List<Order> findAllOrders(){
-		
+
+	public List<Order> findAllOrders() {
+
 		return orderRepository.findAll();
 	}
-	
-	public Page<Order> findByExpiryDate(LocalDate expiry, Pageable page){
-		
+
+	public Page<Order> findByExpiryDate(LocalDate expiry, Pageable page) {
+
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), Sort.by("expiry").descending());
-				
-			return orderRepository.findOrderByExpiryAndSorted(expiry, pageable);
+
+		return orderRepository.findOrderByExpiryAndSorted(expiry, pageable);
 	}
-	
+
 	public Order updateOrder(Order order, Long id) throws OrderNotFoundException {
-		
-		Order norder =  orderRepository.findById(id)
-				.orElseThrow(()-> new OrderNotFoundException("Order with id: "+id+" not found in the order list!"));
-		
+
+		Order norder = orderRepository.findById(id).orElseThrow(
+				() -> new OrderNotFoundException("Order with id: " + id + " not found in the order list!"));
+
 		norder.setExpiry(order.getExpiry());
 		norder.setIsbn(order.getIsbn());
-		
+
 		return orderRepository.save(norder);
 	}
-	
-	
-	public List<Order> findAllSortedByExpiry(int pageNumber, int pageSize){
-		
+
+	public List<Order> findAllSortedByExpiry(int pageNumber, int pageSize) {
+
 		Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by("expiry").descending());
-		
+
 		Page<Order> orderSorted = orderRepository.findAll(page);
-		
+
 		return orderSorted.getContent();
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

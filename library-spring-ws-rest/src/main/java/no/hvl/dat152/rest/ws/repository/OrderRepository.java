@@ -22,24 +22,22 @@ import no.hvl.dat152.rest.ws.model.Order;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	Page<Order> findAll(Pageable pageable);
-	
-	@Query(value = "SELECT user_id FROM orders WHERE id = :id", nativeQuery=true)
+
+	@Query(value = "SELECT user_id FROM orders WHERE id = :id", nativeQuery = true)
 	Long findUserID(@Param("id") Long id);
-	
+
 	Optional<Order> findById(Long orderId);
-	
+
 	@Query(value = "SELECT * FROM orders WHERE expiry <= :expiry", nativeQuery = true)
 	Page<Order> findOrderByExpiryAndSorted(@Param("expiry") LocalDate expiry, Pageable pageable);
-	
-	@Query(value = "SELECT * FROM orders WHERE expiry <= :expiry limit :limit offset :offset ", nativeQuery=true)
-	List<Order> findOrderByExpiry(
-			@Param("expiry") LocalDate expiry,
-			@Param("limit") int limit,
+
+	@Query(value = "SELECT * FROM orders WHERE expiry <= :expiry limit :limit offset :offset ", nativeQuery = true)
+	List<Order> findOrderByExpiry(@Param("expiry") LocalDate expiry, @Param("limit") int limit,
 			@Param("offset") int offset);
-	
+
 	Page<Order> findByExpiryBefore(LocalDate expiry, Pageable pageable);
-	
-	@Query(value = "SELECT * FROM orders WHERE user_id = :id", nativeQuery=true)
+
+	@Query(value = "SELECT * FROM orders WHERE user_id = :id", nativeQuery = true)
 	List<Order> findByUserId(Long id);
-	
+
 }

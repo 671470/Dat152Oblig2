@@ -3,7 +3,6 @@
  */
 package no.hvl.dat152.rest.ws.service;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -109,15 +108,13 @@ public class UserService {
 
 		if (user.isEmpty())
 			throw new UserNotFoundException("User with id: " + userid + " not found");
-		
+
 		Order order = userRepository.findOrderByUserIdAndOrderId(userid, oid);
 
 		if (order == null)
 			throw new OrderNotFoundException("Order with id: " + oid + " not found in the order list!");
-		
-		orderRepository.delete(order);		
-		
-		
+
+		orderRepository.delete(order);
 
 	}
 

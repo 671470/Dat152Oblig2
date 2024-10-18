@@ -36,7 +36,7 @@ public class AdminUserController {
 			throws UserNotFoundException, RoleNotFoundException {
 
 		User user = userService.updateUserRole(id, role);
-		
+
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 

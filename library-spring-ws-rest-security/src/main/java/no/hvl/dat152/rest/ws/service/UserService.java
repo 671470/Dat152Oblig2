@@ -49,9 +49,9 @@ public class UserService {
 	}
 
 	public void deleteUser(Long id) throws UserNotFoundException {
-		
+
 		User user = findUser(id);
-		
+
 		userRepository.delete(user);
 	}
 
@@ -136,7 +136,6 @@ public class UserService {
 
 	}
 
-	
 	public User findUser(Long id) throws UserNotFoundException {
 
 		verifyPrincipalOfUser(id);
@@ -147,10 +146,10 @@ public class UserService {
 	}
 
 	private boolean verifyPrincipalOfUser(Long id) throws UnauthorizedUserActionException {
-		
+
 		UserDetailsImpl userPrincipal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
-		
+
 		System.out.println(userPrincipal.getFirstname());
 		for (GrantedAuthority authority : userPrincipal.getAuthorities()) {
 			if (authority.getAuthority().equals("ADMIN") || authority.getAuthority().equals("SUPER_ADMIN")) {
@@ -164,8 +163,6 @@ public class UserService {
 		if (email.equals(userPrincipal.getEmail()))
 			return true;
 
-		
-		
 		throw new UnauthorizedUserActionException("Unauthorized user action!");
 	}
 

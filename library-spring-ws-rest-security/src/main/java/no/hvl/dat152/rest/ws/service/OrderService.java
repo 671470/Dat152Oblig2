@@ -29,111 +29,87 @@ public class OrderService {
 
 	@Autowired
 	private OrderRepository orderRepository;
-	
-public Order saveOrder(Order order) {
-		
+
+	public Order saveOrder(Order order) {
+
 		order = orderRepository.save(order);
-		
+
 		return order;
 	}
-	
 
 	public void deleteOrder(Long id) throws OrderNotFoundException {
-		
+
 		verifyPrincipalOfOrder(id);
-		
-		Order order = orderRepository.findById(id)
-				.orElseThrow(()-> new OrderNotFoundException("Order with id: "+id+" not found in the order list!"));
-		
+
+		Order order = orderRepository.findById(id).orElseThrow(
+				() -> new OrderNotFoundException("Order with id: " + id + " not found in the order list!"));
+
 		orderRepository.delete(order);
-		
+
 	}
-	
-	public List<Order> findAllOrders(){
-		
+
+	public List<Order> findAllOrders() {
+
 		return (List<Order>) orderRepository.findAll();
 	}
-	
-	public Page<Order> findByExpiryDate(LocalDate expiry, Pageable page){
-		
+
+	public Page<Order> findByExpiryDate(LocalDate expiry, Pageable page) {
+
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), Sort.by("expiry").descending());
-				
-			return orderRepository.findOrderByExpiryAndSorted(expiry, pageable);
+
+		return orderRepository.findOrderByExpiryAndSorted(expiry, pageable);
 	}
-	
+
 	public Order updateOrder(Order order, Long id) throws OrderNotFoundException {
-		
+
 		verifyPrincipalOfOrder(id);
-		
-		Order norder =  orderRepository.findById(id)
-				.orElseThrow(()-> new OrderNotFoundException("Order with id: "+id+" not found in the order list!"));
-		
+
+		Order norder = orderRepository.findById(id).orElseThrow(
+				() -> new OrderNotFoundException("Order with id: " + id + " not found in the order list!"));
+
 		norder.setExpiry(order.getExpiry());
 		norder.setIsbn(order.getIsbn());
-		
+
 		return orderRepository.save(norder);
 	}
-	
-	
-	public List<Order> findAllSortedByExpiry(int pageNumber, int pageSize){
-		
+
+	public List<Order> findAllSortedByExpiry(int pageNumber, int pageSize) {
+
 		Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by("expiry").descending());
-		
+
 		Page<Order> orderSorted = orderRepository.findAll(page);
-		
+
 		return orderSorted.getContent();
 	}
-	// TODO copy your solutions from previous tasks!
-	
+
 	public Order findOrder(Long id) throws OrderNotFoundException, UnauthorizedOrderActionException {
-		
-		verifyPrincipalOfOrder(id);	// verify who is making this request - Only ADMIN or SUPER_ADMIN can access any order 
-		Order order = orderRepository.findById(id)
-				.orElseThrow(()-> new OrderNotFoundException("Order with id: "+id+" not found in the order list!"));
-		
+
+		verifyPrincipalOfOrder(id); // verify who is making this request - Only ADMIN or SUPER_ADMIN can access any
+									// order
+		Order order = orderRepository.findById(id).orElseThrow(
+				() -> new OrderNotFoundException("Order with id: " + id + " not found in the order list!"));
+
 		return order;
 	}
-	
+
 	private boolean verifyPrincipalOfOrder(Long id) throws UnauthorizedOrderActionException {
-		
-		UserDetailsImpl userPrincipal = (UserDetailsImpl) SecurityContextHolder.getContext()
-					.getAuthentication().getPrincipal();
+
+		UserDetailsImpl userPrincipal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
 		// verify if the user sending request is an ADMIN or SUPER_ADMIN
-		for(GrantedAuthority authority : userPrincipal.getAuthorities()){
-			if(authority.getAuthority().equals("ADMIN") || 
-					authority.getAuthority().equals("SUPER_ADMIN")) {
+		for (GrantedAuthority authority : userPrincipal.getAuthorities()) {
+			if (authority.getAuthority().equals("ADMIN") || authority.getAuthority().equals("SUPER_ADMIN")) {
 				return true;
 			}
 		}
-		
+
 		// otherwise, make sure that the user is the one who initially made the order
 		String email = orderRepository.findEmailByOrderId(id);
-		
-		if(email.equals(userPrincipal.getEmail()))
+
+		if (email.equals(userPrincipal.getEmail()))
 			return true;
-		
+
 		throw new UnauthorizedOrderActionException("Unauthorized order action!");
 
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -50,9 +50,9 @@ public class BookService {
 	public void deleteByISBN(String isbn) throws BookNotFoundException {
 
 		Book book = bookRepository.findBookByISBN(isbn);
-				if (book == null) {
-					throw new BookNotFoundException("Book with ISBN " + isbn + " not found.");
-				}
+		if (book == null) {
+			throw new BookNotFoundException("Book with ISBN " + isbn + " not found.");
+		}
 
 		bookRepository.delete(book);
 

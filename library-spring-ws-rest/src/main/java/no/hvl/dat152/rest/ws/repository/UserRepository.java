@@ -14,8 +14,8 @@ import no.hvl.dat152.rest.ws.model.User;
 /**
  * 
  */
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT o FROM User u JOIN u.orders o WHERE u.userid = :userId AND o.id = :orderId")
-    Order findOrderByUserIdAndOrderId(@Param("userId") Long userId, @Param("orderId") Long orderId);
+	Order findOrderByUserIdAndOrderId(@Param("userId") Long userId, @Param("orderId") Long orderId);
 }

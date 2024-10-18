@@ -3,7 +3,6 @@
  */
 package no.hvl.dat152.rest.ws.controller;
 
-
 import java.time.LocalDate;
 
 import java.util.List;
@@ -34,15 +33,16 @@ import no.hvl.dat152.rest.ws.service.OrderService;
 @RestController
 @RequestMapping("/elibrary/api/v1")
 public class OrderController {
-	
+
 	@Autowired
 	private OrderService orderService;
-	
+
 	@GetMapping("/orders")
-	public ResponseEntity<Object> getAllBorrowOrders(@RequestParam(required = false) LocalDate expiry, @RequestParam(defaultValue ="0") int pageNumber, @RequestParam(defaultValue="10") int pageSize){
-		
+	public ResponseEntity<Object> getAllBorrowOrders(@RequestParam(required = false) LocalDate expiry,
+			@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize) {
+
 		List<Order> orders = null;
-		if(expiry != null) {
+		if (expiry != null) {
 
 			Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("expiry").descending());
 			orders = orderService.findByExpiryDate(expiry, pageable).getContent();
@@ -50,68 +50,37 @@ public class OrderController {
 		} else {
 			orders = orderService.findAllSortedByExpiry(pageNumber, pageSize);
 		}
-	
+
 		return new ResponseEntity<>(orders, HttpStatus.OK);
-		
-		
+
 	}
 
-	// TODO - getAllBorrowOrders (@Mappings, URI=/orders, and method) + filter by expiry and paginate 
-	
 	@GetMapping("/orders/{id}")
-	public ResponseEntity<Object> getBorrowOrder(@PathVariable("id") Long id) throws OrderNotFoundException{
-		
+	public ResponseEntity<Object> getBorrowOrder(@PathVariable("id") Long id) throws OrderNotFoundException {
+
 		Order order = orderService.findOrder(id);
-		
+
 		return new ResponseEntity<>(order, HttpStatus.OK);
-		
-		
+
 	}
-	
-	// TODO - getBorrowOrder (@Mappings, URI=/orders/{id}, and method)
-	
+
 	@PutMapping("/orders/{id}")
-	public ResponseEntity<Object> updateOrder(@PathVariable("id") Long id, @RequestBody Order order) throws OrderNotFoundException{
-		
+	public ResponseEntity<Object> updateOrder(@PathVariable("id") Long id, @RequestBody Order order)
+			throws OrderNotFoundException {
+
 		Order norder = orderService.updateOrder(order, id);
-		
+
 		return new ResponseEntity<>(norder, HttpStatus.OK);
-		
+
 	}
-	
-	// TODO - updateOrder (@Mappings, URI=/orders/{id}, and method)
-	
+
 	@DeleteMapping("/orders/{id}")
-	public ResponseEntity<Object> deleteBookOrder(@PathVariable("id") Long id) throws OrderNotFoundException{
-		
+	public ResponseEntity<Object> deleteBookOrder(@PathVariable("id") Long id) throws OrderNotFoundException {
+
 		orderService.deleteOrder(id);
-		
+
 		return new ResponseEntity<>(HttpStatus.OK);
-		
+
 	}
-	
-	// TODO - deleteBookOrder (@Mappings, URI=/orders/{id}, and method)
-	
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

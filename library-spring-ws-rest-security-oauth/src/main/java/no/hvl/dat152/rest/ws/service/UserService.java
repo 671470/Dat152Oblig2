@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import no.hvl.dat152.rest.ws.exceptions.BookNotFoundException;
@@ -21,7 +19,6 @@ import no.hvl.dat152.rest.ws.model.User;
 import no.hvl.dat152.rest.ws.repository.BookRepository;
 import no.hvl.dat152.rest.ws.repository.OrderRepository;
 import no.hvl.dat152.rest.ws.repository.UserRepository;
-
 
 /**
  * @author tdoy
@@ -49,15 +46,13 @@ public class UserService {
 	}
 
 	public void deleteUser(Long id) throws UserNotFoundException {
-		
+
 		User user = findUser(id);
-		
+
 		userRepository.delete(user);
 	}
 
 	public Set<Order> getUserOrders(Long userid) {
-
-	
 
 		Optional<User> user = userRepository.findById(userid);
 
@@ -69,7 +64,7 @@ public class UserService {
 
 		User nuser = userRepository.findById(id)
 				.orElseThrow(() -> new UserNotFoundException("User with id: " + id + " not found"));
-		
+
 		nuser.setFirstname(user.getFirstname());
 		nuser.setLastname(user.getLastname());
 
@@ -84,8 +79,6 @@ public class UserService {
 	}
 
 	public Order getUserOrder(Long userid, Long oid) throws UserNotFoundException, OrderNotFoundException {
-
-	
 
 		Optional<User> user = userRepository.findById(userid);
 
@@ -119,8 +112,6 @@ public class UserService {
 
 	public User createOrdersForUser(Long userid, Order order) throws UserNotFoundException, BookNotFoundException {
 
-		
-
 		User user = userRepository.findById(userid)
 				.orElseThrow(() -> new UserNotFoundException("User with id: " + userid + " not found"));
 
@@ -136,16 +127,12 @@ public class UserService {
 
 	}
 
-	
 	public User findUser(Long id) throws UserNotFoundException {
-
 
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new UserNotFoundException("User with id: " + id + " not found in the user list!"));
 
 		return user;
 	}
-
-
 
 }
